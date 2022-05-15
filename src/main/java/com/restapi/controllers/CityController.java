@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,22 +30,23 @@ public class CityController {
 	
 	@GetMapping("/")
 	public List<City> getAllCity(){
-		return null;
+		List<City> list = cityRepo.findAll();
+		return list;
 	}
 	
 	@PostMapping("/")
-	public void addCity(@PathVariable City city) {
-		
+	public void addCity(@RequestBody City city) {
+		cityRepo.save(city);
 	}
 	
 	@DeleteMapping("/{id}")
 	public void deleteCity(@PathVariable int id) {
-		
+		cityRepo.deleteById(id);
 	}
 	
 	@PutMapping("/")
-	public void updateCity(@PathVariable City city) {
-		
+	public void updateCity(@RequestBody City city) {
+		cityRepo.save(city);
 	}
 
 }

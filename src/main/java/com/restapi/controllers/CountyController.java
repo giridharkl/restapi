@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,22 +30,23 @@ public class CountyController {
 	
 	@GetMapping("/")
 	public List<Country> getAllCountries(){
-		return null;
+		List<Country> countries = countryRepo.findAll();
+		return countries;
 	}
 	
 	@PostMapping("/")
-	public void addCountry(@PathVariable Country country) {
-		
+	public void addCountry(@RequestBody Country country) {
+		countryRepo.save(country);
 	}
 	
 	@DeleteMapping("/{id}")
 	public void deleteCountry(@PathVariable int id) {
-		
+		countryRepo.deleteById(id);
 	}
 	
 	@PutMapping("/")
-	public void updateCountry(@PathVariable Country country) {
-		
+	public void updateCountry(@RequestBody Country country) {
+		countryRepo.save(country);
 	}
 
 }

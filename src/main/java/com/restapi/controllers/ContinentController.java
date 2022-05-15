@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,21 +31,22 @@ public class ContinentController {
 	
 	@GetMapping("/")
 	public List<Continent> getAllContinents(){
-		return null;
+		List<Continent> list = continentRepo.findAll();
+		return list;
 	}
 	
 	@PostMapping("/")
-	public void addContinent(@PathVariable Continent continent) {
-		
+	public void addContinent(@RequestBody Continent continent) {
+		continentRepo.save(continent);
 	}
 	
 	@DeleteMapping("/{id}")
 	public void deleteContinent(@PathVariable int id) {
-		
+		continentRepo.deleteById(id);
 	}
 	
 	@PutMapping("/")
-	public void updateContinent(@PathVariable Continent country) {
-		
+	public void updateContinent(@RequestBody Continent continent) {
+		continentRepo.save(continent);
 	}
 }

@@ -1,9 +1,7 @@
 FROM openjdk:8-jdk-alpine
 
-WORKDIR /apps
+WORKDIR /home/apps
 
-COPY target/*.jar /apps/rest-api.jar
+COPY target/*.jar /home/apps/rest-api.jar
 
-#ENTRYPOINT ["java", "-jar","/apps/rest-api.jar"]
-
-ENTRYPOINT ["nohup","java", "-jar","/apps/rest-api.jar","&"]
+ENTRYPOINT ["java", "-jar","/home/apps/rest-api.jar"]
