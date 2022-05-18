@@ -1,5 +1,7 @@
 package com.restapi.controllers;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.restapi.models.ApiError;
 import com.restapi.models.ApiSuccess;
 import com.restapi.models.City;
+import com.restapi.models.CityModel;
+import com.restapi.models.Continent;
+import com.restapi.models.Country;
 import com.restapi.repos.CityRepo;
+import com.restapi.repos.ContinentRepo;
+import com.restapi.repos.CountryRepo;
 
 @RestController
 @RequestMapping("/v1/cities")
@@ -26,12 +33,20 @@ public class CityController {
 	@Autowired
 	CityRepo cityRepo;
 	
+	@Autowired
+	ContinentRepo continentRepo;
+	
+	@Autowired
+	CountryRepo countryRepo;
+	
 	@GetMapping("/{id}")
 	public ResponseEntity<Object> getCity(@PathVariable int id) {
 		City city;
+		CityModel cityModel;
 		try {
 			city = cityRepo.findById(id).get();
-			return new ResponseEntity<Object>(city, HttpStatus.FOUND);
+			cityModel = getCityModel(city);
+			return new ResponseEntity<Object>(cityModel, HttpStatus.FOUND);
 		} catch (Exception e) {
 			return new ResponseEntity<Object>(new ApiError(HttpStatus.NOT_FOUND, e.getMessage()), HttpStatus.NOT_FOUND);
 		}
@@ -40,9 +55,18 @@ public class CityController {
 	@GetMapping("/")
 	public ResponseEntity<Object> getAllCity(){
 		List<City> list;
+		List<CityModel> cityModelList = null;
 		try {
 			list = cityRepo.findAll();
-			return new ResponseEntity<Object>(list, HttpStatus.FOUND);
+			if(list != null && list.size() > 0) {
+				cityModelList = new ArrayList<CityModel>();
+				for(Iterator<City> i = list.iterator(); i.hasNext();) {
+					City c = i.next();
+					CityModel cm = getCityModel(c);
+					cityModelList.add(cm);
+				}
+			}
+			return new ResponseEntity<Object>(cityModelList, HttpStatus.FOUND);
 		} catch (Exception e) {
 			return new ResponseEntity<Object>(new ApiError(HttpStatus.NOT_FOUND, e.getMessage()), HttpStatus.NOT_FOUND);
 		}
@@ -51,6 +75,19 @@ public class CityController {
 	@PostMapping("/")
 	public ResponseEntity<Object> addCity(@RequestBody City city) {
 		try {
+			Country country;
+			Continent continent;
+			try {
+				country = countryRepo.findById(city.getCountryId()).get();
+			} catch (Exception e) {
+				return new ResponseEntity<Object>(new ApiError(HttpStatus.NOT_FOUND, "Country " + e.getMessage()), HttpStatus.NOT_FOUND);
+			}
+			
+			try {
+				continent = continentRepo.findById(city.getContinentId()).get();
+			} catch (Exception e) {
+				return new ResponseEntity<Object>(new ApiError(HttpStatus.NOT_FOUND, "Continent " + e.getMessage()), HttpStatus.NOT_FOUND);
+			}
 			cityRepo.save(city);
 			return new ResponseEntity<Object>(new ApiSuccess(HttpStatus.OK,"Added"), HttpStatus.FOUND);
 		} catch (Exception e) {
@@ -80,9 +117,18 @@ public class CityController {
 	
 	@GetMapping("/country/{id}")
 	public ResponseEntity<Object> getCitiesByCountryId(@PathVariable int id){
+		List<CityModel> cityModelList = null;
 		try {
-			cityRepo.findByContinentId(id);
-			return null;
+			List<City> cities = cityRepo.findByCountryId(id);
+			if(cities != null && cities.size() > 0) {
+				cityModelList = new ArrayList<CityModel>();
+				for(Iterator<City> i = cities.iterator(); i.hasNext();) {
+					City c = i.next();
+					CityModel cm = getCityModel(c);
+					cityModelList.add(cm);
+				}
+			}
+			return new ResponseEntity<Object>(cityModelList, HttpStatus.FOUND);
 		} catch(Exception e){
 			return null;
 		}
@@ -90,12 +136,43 @@ public class CityController {
 	
 	@GetMapping("/continent/{id}")
 	public ResponseEntity<Object> getCitiesByContinentId(@PathVariable int id){
+		List<CityModel> cityModelList = null;
 		try {
-			cityRepo.findByCountryId(id);
-			return null;
+			List<City> cities = cityRepo.findByContinentId(id);
+			if(cities != null && cities.size() > 0) {
+				cityModelList = new ArrayList<CityModel>();
+				for(Iterator<City> i = cities.iterator(); i.hasNext();) {
+					City c = i.next();
+					CityModel cm = getCityModel(c);
+					cityModelList.add(cm);
+				}
+			}
+			return new ResponseEntity<Object>(cityModelList, HttpStatus.FOUND);
 		} catch(Exception e){
-			return null;
+			return new ResponseEntity<Object>(new ApiError(HttpStatus.NOT_FOUND, e.getMessage()), HttpStatus.NOT_FOUND);
 		}
 	}
-
+	
+	private CityModel getCityModel(City city) {
+		CityModel cityModel = null;
+		Country country;
+		Continent continent;
+		try {
+			if(city != null) {
+				continent = continentRepo.findById(city.getContinentId()).get();
+				country = countryRepo.findById(city.getCountryId()).get();
+				cityModel = new CityModel();
+				cityModel.setId(city.getId());
+				cityModel.setName(city.getName());
+				cityModel.setContinent(continent);
+				cityModel.setCountry(country);
+			}
+		}
+		catch(Exception e) {
+			
+		}
+		finally {
+			return cityModel;
+		}
+	}
 }
