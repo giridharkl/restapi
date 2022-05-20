@@ -4,12 +4,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 @Entity
 public class City {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "city-seq-gen")
+	@SequenceGenerator(name="city-seq-gen", sequenceName = "city_seq", initialValue = 1, allocationSize = 1)
 	private int id;
 	private String name;
 	private int continentId;
