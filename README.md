@@ -52,6 +52,7 @@ Sample Output:
   mvn install
   ```
 - target/ folder contains the compiled application jar
+- command to run application: `java -jar target\restapi-0.0.1-SNAPSHOT.jar`
 ## Docker
 - Docker compose command: `docker-compose up -d`
 ## H2 Database Console
@@ -60,4 +61,9 @@ Sample Output:
 - Docker latest version to build image and run the container
 - JDK/JRE 1.8 with JAVA_HOME set for compilation
 - Apache Maven 3.3 for compiling Spring Boot application 
-- Python 3.0 with Robot library 
+- Python 3.0 with Robot libraries
+
+## References
+- [Robot Framework](https://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html)
+- [H2 Database](https://www.h2database.com/html/commands.html)
+- [Spring Boot](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/)
