@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +41,8 @@ public class CityController {
 	@Autowired
 	CountryRepo countryRepo;
 	
+	private static Logger log = LoggerFactory.getLogger(CityController.class);
+	
 	@GetMapping("/{id}")
 	public ResponseEntity<Object> getCity(@PathVariable int id) {
 		City city;
@@ -48,6 +52,7 @@ public class CityController {
 			cityModel = getCityModel(city);
 			return new ResponseEntity<Object>(cityModel, HttpStatus.FOUND);
 		} catch (Exception e) {
+			log.error(e.getMessage());
 			return new ResponseEntity<Object>(new ApiError(HttpStatus.NOT_FOUND, e.getMessage()), HttpStatus.NOT_FOUND);
 		}
 	}
@@ -68,6 +73,7 @@ public class CityController {
 			}
 			return new ResponseEntity<Object>(cityModelList, HttpStatus.FOUND);
 		} catch (Exception e) {
+			log.error(e.getMessage());
 			return new ResponseEntity<Object>(new ApiError(HttpStatus.NOT_FOUND, e.getMessage()), HttpStatus.NOT_FOUND);
 		}
 	}
@@ -80,17 +86,20 @@ public class CityController {
 			try {
 				country = countryRepo.findById(city.getCountryId()).get();
 			} catch (Exception e) {
+				log.error(e.getMessage());
 				return new ResponseEntity<Object>(new ApiError(HttpStatus.NOT_FOUND, "Country " + e.getMessage()), HttpStatus.NOT_FOUND);
 			}
 			
 			try {
 				continent = continentRepo.findById(city.getContinentId()).get();
 			} catch (Exception e) {
+				log.error(e.getMessage());
 				return new ResponseEntity<Object>(new ApiError(HttpStatus.NOT_FOUND, "Continent " + e.getMessage()), HttpStatus.NOT_FOUND);
 			}
 			cityRepo.save(city);
 			return new ResponseEntity<Object>(new ApiSuccess(HttpStatus.OK,"Added"), HttpStatus.FOUND);
 		} catch (Exception e) {
+			log.error(e.getMessage());
 			return new ResponseEntity<Object>(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -101,6 +110,7 @@ public class CityController {
 			cityRepo.deleteById(id);
 			return new ResponseEntity<Object>(new ApiSuccess(HttpStatus.OK,"Deleted"), HttpStatus.FOUND);
 		} catch (Exception e) {
+			log.error(e.getMessage());
 			return new ResponseEntity<Object>(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -111,6 +121,7 @@ public class CityController {
 			cityRepo.save(city);
 			return new ResponseEntity<Object>(new ApiSuccess(HttpStatus.OK,"Updated"), HttpStatus.FOUND);
 		} catch (Exception e) {
+			log.error(e.getMessage());
 			return new ResponseEntity<Object>(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -130,7 +141,8 @@ public class CityController {
 			}
 			return new ResponseEntity<Object>(cityModelList, HttpStatus.FOUND);
 		} catch(Exception e){
-			return null;
+			log.error(e.getMessage());
+			return new ResponseEntity<Object>(new ApiError(HttpStatus.NOT_FOUND, e.getMessage()), HttpStatus.NOT_FOUND);
 		}
 	}
 	
@@ -149,6 +161,7 @@ public class CityController {
 			}
 			return new ResponseEntity<Object>(cityModelList, HttpStatus.FOUND);
 		} catch(Exception e){
+			log.error(e.getMessage());
 			return new ResponseEntity<Object>(new ApiError(HttpStatus.NOT_FOUND, e.getMessage()), HttpStatus.NOT_FOUND);
 		}
 	}
@@ -169,7 +182,7 @@ public class CityController {
 			}
 		}
 		catch(Exception e) {
-			
+			log.error(e.getMessage());
 		}
 		finally {
 			return cityModel;

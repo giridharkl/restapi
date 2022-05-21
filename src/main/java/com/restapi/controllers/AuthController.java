@@ -1,5 +1,7 @@
 package com.restapi.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,12 +33,15 @@ public class AuthController {
 	@Autowired
 	private JwtUtil jwtUtil;
 	
+	private static Logger log = LoggerFactory.getLogger(AuthController.class);
+	
 	@PostMapping(value="/auth")
 	public ResponseEntity<AuthResponse> createAuthToken(@RequestBody AuthRequest authRequest) throws Exception {
 		try {
 			authManager.authenticate(
 					new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
 		} catch (BadCredentialsException e) {
+			log.error("Wrong username or password!" + e.getLocalizedMessage());
 			throw new Exception("Wrong username or password!");
 		}
 		final UserDetails userDetails = restUserDetailsService.loadUserByUsername(authRequest.getUsername());

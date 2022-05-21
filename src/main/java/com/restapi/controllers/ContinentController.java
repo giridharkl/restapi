@@ -3,6 +3,8 @@ package com.restapi.controllers;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,9 @@ public class ContinentController {
 	@Autowired
 	ContinentRepo continentRepo;
 	
+	private static Logger log = LoggerFactory.getLogger(ContinentController.class);
+
+	
 	@GetMapping("/{id}")
 	public ResponseEntity<Object> getContinent(@PathVariable int id) {
 		Continent continent = null;
@@ -35,6 +40,7 @@ public class ContinentController {
 			continent = continentRepo.findById(id).get();
 			return new ResponseEntity<Object>(continent, HttpStatus.FOUND);
 		} catch (Exception e) {
+			log.error(e.getMessage());
 			return new ResponseEntity<Object>(new ApiError(HttpStatus.NOT_FOUND, e.getMessage()), HttpStatus.NOT_FOUND);
 		}
 	}
@@ -46,6 +52,7 @@ public class ContinentController {
 			list = continentRepo.findAll();
 			return new ResponseEntity<Object>(list, HttpStatus.FOUND);
 		} catch (Exception e) {
+			log.error(e.getMessage());
 			return new ResponseEntity<Object>(new ApiError(HttpStatus.NOT_FOUND, e.getMessage()), HttpStatus.NOT_FOUND);
 		}
 	}
@@ -56,6 +63,7 @@ public class ContinentController {
 			continentRepo.save(continent);
 			return new ResponseEntity<Object>(new ApiSuccess(HttpStatus.OK,"Added"), HttpStatus.FOUND);
 		} catch (Exception e) {
+			log.error(e.getMessage());
 			return new ResponseEntity<Object>(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -66,6 +74,7 @@ public class ContinentController {
 			continentRepo.deleteById(id);
 			return new ResponseEntity<Object>(new ApiSuccess(HttpStatus.OK,"Deleted"), HttpStatus.FOUND);
 		} catch (Exception e) {
+			log.error(e.getMessage());
 			return new ResponseEntity<Object>(new ApiError(HttpStatus.NOT_FOUND, e.getMessage()), HttpStatus.NOT_FOUND);
 		}
 	}
@@ -76,6 +85,7 @@ public class ContinentController {
 			continentRepo.save(continent);
 			return new ResponseEntity<Object>(new ApiSuccess(HttpStatus.OK,"Updated"), HttpStatus.FOUND);
 		} catch (Exception e) {
+			log.error(e.getMessage());
 			return new ResponseEntity<Object>(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

@@ -2,6 +2,8 @@ package com.restapi.controllers;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +23,12 @@ import com.restapi.repos.CountryRepo;
 
 @RestController
 @RequestMapping("/v1/countries")
-public class CountyController {
+public class CountryController {
 	
 	@Autowired
 	CountryRepo countryRepo;
+	
+	private static Logger log = LoggerFactory.getLogger(CountryController.class);
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Object> getCountry(@PathVariable int id) {
@@ -33,6 +37,7 @@ public class CountyController {
 			country = countryRepo.findById(id).get();
 			return new ResponseEntity<Object>(country, HttpStatus.FOUND);
 		} catch (Exception e) {
+			log.error(e.getMessage());
 			return new ResponseEntity<Object>(new ApiError(HttpStatus.NOT_FOUND, e.getMessage()), HttpStatus.NOT_FOUND);
 		}
 	}
@@ -44,6 +49,7 @@ public class CountyController {
 			countries = countryRepo.findAll();
 			return new ResponseEntity<Object>(countries, HttpStatus.FOUND);
 		} catch (Exception e) {
+			log.error(e.getMessage());
 			return new ResponseEntity<Object>(new ApiError(HttpStatus.NOT_FOUND, e.getMessage()), HttpStatus.NOT_FOUND);
 		}
 	}
@@ -54,6 +60,7 @@ public class CountyController {
 			countryRepo.save(country);
 			return new ResponseEntity<Object>(new ApiSuccess(HttpStatus.OK,"Added"), HttpStatus.FOUND);
 		} catch (Exception e) {
+			log.error(e.getMessage());
 			return new ResponseEntity<Object>(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -64,6 +71,7 @@ public class CountyController {
 			countryRepo.deleteById(id);
 			return new ResponseEntity<Object>(new ApiSuccess(HttpStatus.OK,"Deleted"), HttpStatus.FOUND);
 		} catch (Exception e) {
+			log.error(e.getMessage());
 			return new ResponseEntity<Object>(new ApiError(HttpStatus.NOT_FOUND, e.getMessage()), HttpStatus.NOT_FOUND);
 		}
 	}
@@ -74,8 +82,8 @@ public class CountyController {
 			countryRepo.save(country);
 			return new ResponseEntity<Object>(new ApiSuccess(HttpStatus.OK,"Updated"), HttpStatus.FOUND);
 		} catch (Exception e) {
+			log.error(e.getMessage());
 			return new ResponseEntity<Object>(new ApiError(HttpStatus.NOT_FOUND, e.getMessage()), HttpStatus.NOT_FOUND);
 		}
 	}
-
 }
