@@ -7,6 +7,7 @@ REST API sample implementation for city, country and continent using Spring Boot
 - In-memory H2 database
 - JWT token for api authentication 
 - Robot Test suite, Html Test Reports
+- Swagger API Documentation
 ## API Documentation
 ### Authentication
 Authentication using JWT Tokens. Token is valid for 60 minutes.
@@ -57,6 +58,8 @@ Sample Output:
 - Docker compose command: `docker-compose up -d`
 ## H2 Database Console
 - H2 database console can be accessed from the Browser http://localhost:8088/h2-console/
+## Swagger Documentation
+- [RestApi Documentation](http://localhost:8088/swagger-ui.html)
 ## Robot Tests
 - Robot test suits are executed with the command: `robot countries.robot`
 ## System Requirements
