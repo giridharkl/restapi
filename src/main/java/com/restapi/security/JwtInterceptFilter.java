@@ -7,6 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +19,8 @@ import org.springframework.security.web.authentication.preauth.websphere.WebSphe
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.restapi.controllers.CityController;
+
 @Component
 public class JwtInterceptFilter extends OncePerRequestFilter{
 	
@@ -25,6 +29,8 @@ public class JwtInterceptFilter extends OncePerRequestFilter{
 	
 	@Autowired
 	JwtUtil jwtUtil;
+	
+	private static Logger log = LoggerFactory.getLogger(JwtInterceptFilter.class);
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -37,7 +43,11 @@ public class JwtInterceptFilter extends OncePerRequestFilter{
 		
 		if(authHeader != null && authHeader.startsWith("Bearer ")) {
 			jwt = authHeader.substring(7);
-			username = jwtUtil.extractUsername(jwt);
+			try {
+				username = jwtUtil.extractUsername(jwt);
+			} catch (Exception e) {
+				log.error(e.getMessage());
+			}
 		}
 		
 		if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
