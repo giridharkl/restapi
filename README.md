@@ -56,12 +56,14 @@ Sample Output:
 ## Docker
 - Docker compose command: `docker-compose up -d`
 ## H2 Database Console
-- H2 database console can be accessed from the Browser http://localhost:8080/h2-console/
+- H2 database console can be accessed from the Browser http://localhost:8088/h2-console/
+## Robot Tests
+- Robot test suits are executed with the command: `robot countries.robot`
 ## System Requirements
 - Docker latest version to build image and run the container
 - JDK/JRE 1.8 with JAVA_HOME set for compilation
 - Apache Maven 3.3 for compiling Spring Boot application 
-- Python 3.0 with Robot libraries
+- Python 3.0 with Robot libraries (Robotframework, RequestsLibrary, JSONLibrary)
 
 ## References
 - [Robot Framework](https://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html)
