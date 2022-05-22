@@ -56,6 +56,13 @@ Sample Output:
 - command to run application: `java -jar target\restapi-0.0.1-SNAPSHOT.jar`
 ## Docker
 - Docker compose command: `docker-compose up -d`
+## Application Packaging
+- Application packaged into docker image
+  ```
+  mvn clean
+  mvn install
+  docker-compose up -d
+  ```
 ## H2 Database Console
 - H2 database console can be accessed from the Browser http://localhost:8088/h2-console/
 ## Swagger Documentation
